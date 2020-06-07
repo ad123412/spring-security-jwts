@@ -24,8 +24,8 @@ public class JwtTokenUtil implements Serializable {
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, claim -> new String(Base64.getDecoder().decode(claim.getSubject())));
-        //return getClaimFromToken(token, Claims::getSubject);
+        //return getClaimFromToken(token, claim -> new String(Base64.getDecoder().decode(claim.getSubject())));
+        return getClaimFromToken(token, Claims::getSubject);
     }
 
     //retrieve expiration date from jwt token
@@ -67,11 +67,11 @@ public class JwtTokenUtil implements Serializable {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        String encodedSubject = Base64.getEncoder().encodeToString(subject.getBytes());
+        //String encodedSubject = Base64.getEncoder().encodeToString(subject.getBytes());
         //String encodedSecret = Base64.getEncoder().encodeToString(secret.getBytes());
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(encodedSubject)
+                .setSubject(subject)
                 .setIssuer("ada")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
